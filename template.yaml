@@ -1,0 +1,33 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Rupture E2E Sandbox - Lambda on nodejs20.x (deprecated, will be migrated by rupture-bot)
+
+Resources:
+  EchoFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: index.handler
+      Runtime: nodejs20.x
+      MemorySize: 256
+      Timeout: 10
+      CodeUri: .
+      Events:
+        ApiEvent:
+          Type: Api
+          Properties:
+            Path: /echo
+            Method: post
+
+  ProcessorFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: processor.handler
+      Runtime: nodejs20.x
+      MemorySize: 512
+      Timeout: 30
+      CodeUri: .
+
+Outputs:
+  ApiUrl:
+    Description: API Gateway URL
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/echo"
